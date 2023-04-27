@@ -18,7 +18,7 @@ namespace ClassHubSSO.Server.Controllers
             Console.WriteLine("[ID : " + request.UserId + " PW : " + request.Password + "]에서 로그인 시도를 했습니다. \n이제 인증 서버로 해당 계정정보를 전송합니다.");
             //인증서버로 ID와 PW를 보냄
             using HttpClient httpClient = new HttpClient();
-            string apiUrl = "https://localhost:7119/SSOAuthorizarion";
+            string apiUrl = "https://classhubsso.azurewebsites.net/SSOAuthorizarion";
 
             var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
