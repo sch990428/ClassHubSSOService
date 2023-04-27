@@ -15,10 +15,10 @@ namespace ClassHubSSO.Server.Controllers
         [HttpPost] //로그인 POST요청
         public async Task<IActionResult> POST([FromBody] SSOLoginRequest request)
         {
-            Console.WriteLine("[ID : " + request.Id + " PW : " + request.Password + "]에서 로그인 시도를 했습니다. \n이제 인증 서버로 해당 계정정보를 전송합니다.");
+            Console.WriteLine("[ID : " + request.UserId + " PW : " + request.Password + "]에서 로그인 시도를 했습니다. \n이제 인증 서버로 해당 계정정보를 전송합니다.");
             //인증서버로 ID와 PW를 보냄
             using HttpClient httpClient = new HttpClient();
-            string apiUrl = "https://classhubsso.azurewebsites.net/SSOAuthorizarion";
+            string apiUrl = "https://localhost:7119/SSOAuthorizarion";
 
             var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
@@ -35,7 +35,7 @@ namespace ClassHubSSO.Server.Controllers
                 if (Uri.TryCreate(request.RedirectUri, UriKind.Absolute, out Uri redirectUri)
     && QueryHelpers.ParseQuery(redirectUri.Query).TryGetValue("redirect_uri", out var redirectUriValue))
                 {
-                    string redirectUrlWithAuthCode = $"{redirectUriValue}?code={data.AuthorizationCode}";
+                    string redirectUrlWithAuthCode = $"{redirectUriValue}?id={data.UserId}&code={data.AuthorizationCode}";
 
                     return Ok(redirectUrlWithAuthCode);
                 }

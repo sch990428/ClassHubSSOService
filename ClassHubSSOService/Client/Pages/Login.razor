@@ -59,7 +59,7 @@
         logger.LogInformation("로그인 시도" + username);
         //로그인 버튼을 누르면 서버로 POST요청(body엔 ID와 PW)을 보냄
         
-        var request = new SSOLoginRequest { Id = username, Password = password, RedirectUri = NavigationManager.Uri };
+        var request = new SSOLoginRequest { UserId = username, Password = password, RedirectUri = NavigationManager.Uri };
         var response = await Http.PostAsJsonAsync<SSOLoginRequest>("SSOLogin", request);
 
         if (response.IsSuccessStatusCode)
