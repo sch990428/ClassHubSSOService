@@ -56,11 +56,11 @@ namespace SSOAuthorizationServer.Controllers
             string role;
             if (request.UserId == "1")
             {
-                role = "professor";
+                role = "student"; 
             }
             else
             {
-                role = "student";
+                role = "professor";
             }
                 // JWT 토큰 생성
                 var tokenHandler = new JwtSecurityTokenHandler();
