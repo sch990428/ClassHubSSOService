@@ -70,7 +70,7 @@ namespace SSOAuthorizationServer.Controllers
             {
                 new Claim(ClaimTypes.Name, "Hello"),
                 new Claim(ClaimTypes.Role, role),
-                new Claim("code", "12345")
+                new Claim("user_id", request.UserId)
             });
             var tokenDescriptor = new SecurityTokenDescriptor
             {
