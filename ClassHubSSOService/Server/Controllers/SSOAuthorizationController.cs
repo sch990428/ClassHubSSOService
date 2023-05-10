@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using SSOAuthorizationServer.Shared;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 using System.Security.Cryptography;
@@ -86,6 +87,13 @@ namespace SSOAuthorizationServer.Controllers
             string Rtoken = GenerateCode();
             var response = new AccessTokenResponse { AccessToken = Atoken, RefreshToken = Rtoken };
             string json = JsonSerializer.Serialize(response);
+
+            string cacheConnection = "classhub-sso-cache.redis.cache.windows.net:6380,password=7Ke76ORsQpWOiyIFGvc82ycd8T8ztN2x0AzCaEF7DgU=,ssl=True,abortConnect=False";
+            ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
+
+            // 데이터 저장
+            IDatabase cache = connection.GetDatabase();
+            cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromSeconds(60));
 
             return Ok(json);
         }
