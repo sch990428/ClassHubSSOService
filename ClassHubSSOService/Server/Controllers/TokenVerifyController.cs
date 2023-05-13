@@ -21,7 +21,7 @@ namespace ClassHubSSO.Server.Controllers
     public class TokenVerifyController : ControllerBase
     {
         [HttpGet]
-        public Task<IActionResult> VerifyToken([FromQuery] string accessToken)
+        public Task<IActionResult> VerifyToken([FromQuery] int user_id, [FromQuery] string accessToken)
         {
             Console.WriteLine(accessToken);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -41,23 +41,25 @@ namespace ClassHubSSO.Server.Controllers
                 var claimsPrincipal = tokenHandler.ValidateToken(accessToken, validationParameters, out validatedToken);
 
                 //토큰으로부터 정보를 뽑아냄
-                var user_id = claimsPrincipal.FindFirst("user_id").Value;
+                var token_user_id = claimsPrincipal.FindFirst("user_id").Value;
                 var name = claimsPrincipal.FindFirst(ClaimTypes.Name).Value;
                 var role = claimsPrincipal.FindFirst(ClaimTypes.Role).Value;
 
                 Console.WriteLine("아이디" + user_id);
 
-                string cacheConnection = "classhub-sso-cache.redis.cache.windows.net:6380,password=7Ke76ORsQpWOiyIFGvc82ycd8T8ztN2x0AzCaEF7DgU=,ssl=True,abortConnect=False";
-                ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
-                IDatabase cache = connection.GetDatabase();
-                string savedToken = cache.StringGet(user_id+"_atoken");
+                if (int.Parse(token_user_id) == user_id) {
+                    string cacheConnection = "classhub-sso-cache.redis.cache.windows.net:6380,password=7Ke76ORsQpWOiyIFGvc82ycd8T8ztN2x0AzCaEF7DgU=,ssl=True,abortConnect=False";
+                    ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
+                    IDatabase cache = connection.GetDatabase();
+                    string savedToken = cache.StringGet(user_id + "_atoken");
 
-                if (accessToken == savedToken)
-                {
-                    return Task.FromResult<IActionResult>(Ok(true));
-                }
-                else
-                {
+                    if (accessToken == savedToken) {
+                        return Task.FromResult<IActionResult>(Ok(true));
+                    } else {
+                        return Task.FromResult<IActionResult>(Ok(false));
+                    }
+                } else {
+                    Console.WriteLine("위조된 사용자 ID");
                     return Task.FromResult<IActionResult>(Ok(false));
                 }
             }
