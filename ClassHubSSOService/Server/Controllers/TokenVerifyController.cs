@@ -24,13 +24,13 @@ namespace ClassHubSSO.Server.Controllers
         public Task<IActionResult> VerifyToken([FromQuery] int user_id, [FromQuery] string accessToken)
         {
             Console.WriteLine(accessToken);
-            /*
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("ClassHubOnTheBuilding"); //대칭키 암호화
 
             try
             {
-                
+                /*
                 var validationParameters = new TokenValidationParameters //JWT토큰 검증 정보 
                 {
                     ValidateIssuerSigningKey = true,
@@ -65,7 +65,7 @@ namespace ClassHubSSO.Server.Controllers
                     return Task.FromResult<IActionResult>(Ok(false));
                 }
                 */
-            return Task.FromResult<IActionResult>(Ok(true));
+                return Task.FromResult<IActionResult>(Ok(true));
             }
             catch (Exception ex)
             {
