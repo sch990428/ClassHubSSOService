@@ -88,7 +88,7 @@ namespace SSOAuthorizationServer.Controllers
             var response = new AccessTokenResponse { AccessToken = Atoken, RefreshToken = Rtoken };
             string json = JsonSerializer.Serialize(response);
 
-            string cacheConnection = "classhub-sso-cache.redis.cache.windows.net:6380,password=7Ke76ORsQpWOiyIFGvc82ycd8T8ztN2x0AzCaEF7DgU=,ssl=True,abortConnect=False";
+            string cacheConnection = "classhub-sso-chache-cheap.redis.cache.windows.net:6380,password=67jYcaIgYIAFqYLuyeOaNxarFsLNZUO74AzCaDSl6uo=,ssl=True,abortConnect=False";
             ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
 
             // 데이터 저장
