@@ -30,7 +30,6 @@ namespace ClassHubSSO.Server.Controllers
 
             try
             {
-                /*
                 var validationParameters = new TokenValidationParameters //JWT토큰 검증 정보 
                 {
                     ValidateIssuerSigningKey = true,
@@ -50,7 +49,7 @@ namespace ClassHubSSO.Server.Controllers
                 Console.WriteLine("아이디" + user_id);
 
                 if (int.Parse(token_user_id) == user_id) {
-                    string cacheConnection = "classhub-sso-cache.redis.cache.windows.net:6380,password=7Ke76ORsQpWOiyIFGvc82ycd8T8ztN2x0AzCaEF7DgU=,ssl=True,abortConnect=False";
+                    string cacheConnection = "classhub-sso-chache-cheap.redis.cache.windows.net:6380,password=67jYcaIgYIAFqYLuyeOaNxarFsLNZUO74AzCaDSl6uo=,ssl=True,abortConnect=False";
                     ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
                     IDatabase cache = connection.GetDatabase();
                     string savedToken = cache.StringGet(user_id + "_atoken");
@@ -64,8 +63,6 @@ namespace ClassHubSSO.Server.Controllers
                     Console.WriteLine("위조된 사용자 ID");
                     return Task.FromResult<IActionResult>(Ok(false));
                 }
-                */
-                return Task.FromResult<IActionResult>(Ok(true));
             }
             catch (Exception ex)
             {
