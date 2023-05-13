@@ -87,14 +87,14 @@ namespace SSOAuthorizationServer.Controllers
             string Rtoken = GenerateCode();
             var response = new AccessTokenResponse { AccessToken = Atoken, RefreshToken = Rtoken };
             string json = JsonSerializer.Serialize(response);
-
+            /*
             string cacheConnection = "classhub-sso-chache-cheap.redis.cache.windows.net:6380,password=67jYcaIgYIAFqYLuyeOaNxarFsLNZUO74AzCaDSl6uo=,ssl=True,abortConnect=False";
             ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(cacheConnection);
 
             // 데이터 저장
             IDatabase cache = connection.GetDatabase();
             cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromSeconds(60));
-
+            */
             return Ok(json);
         }
 
