@@ -25,7 +25,7 @@ namespace SSOAuthorizationServer.Controllers
         public async Task<IActionResult> POST([FromBody] AuthorizationCodeRequest request)
         {
             Console.WriteLine("[ID : " + request.UserId + " PW : " + request.Password + "]에 대한 인증 요청이 도착했습니다!");
-
+             
             MemoryCache cache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
             string authCode = GenerateCode();
 
@@ -55,7 +55,14 @@ namespace SSOAuthorizationServer.Controllers
             Console.WriteLine("[ID : " + request.UserId + "]에 대한 토큰 발급 요청이 도착했습니다!");
 
             string role;
-            if (request.UserId != "1")
+            var connectionString = "Host=\r\nacademic-info-db.postgres.database.azure.com\r\n;Username=classhub;Password=ch55361!;Database=AcademicInfo";
+            var role_connection = new NpgsqlConnection(connectionString);
+            //해당 id가 학생의 계정에 존재한다면
+            var student_exist_query = "SELECT COUNT(*) FROM student WHERE id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", request.UserId);
+
+            if (role_connection.ExecuteScalar<int>(student_exist_query, parameters) == 1)
             {
                 role = "student"; 
             }
@@ -73,6 +80,7 @@ namespace SSOAuthorizationServer.Controllers
                 new Claim(ClaimTypes.Role, role),
                 new Claim("user_id", request.UserId)
             });
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
