@@ -49,12 +49,12 @@
     <div class="loginText">통합 로그인 | Single Sign On</div>
     <label>
         <span>ID</span><br>
-        <input type="text" @bind-value="username" />
+        <input type="text" @bind-value="username" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
     </label>
     <br>
     <label>
         <span class = "input">비밀번호</span><br>
-        <input type="password" @bind-value="password" />
+        <input type="password" @bind-value="password" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
     </label>
     <br>
     <button @onclick="OnLogin" class="loginBtn">로그인</button>
@@ -74,7 +74,14 @@
         Console.WriteLine(url);
     }
 
-    private async void OnLogin()
+    private async Task HandleKeyDown(KeyboardEventArgs e) {
+
+        if (e.Key == "Enter") {
+            await OnLogin();
+        }
+    }
+
+    private async Task OnLogin()
     {
         logger.LogInformation("로그인 시도" + username);
         //로그인 버튼을 누르면 서버로 POST요청(body엔 ID와 PW)을 보냄
@@ -102,8 +109,6 @@
             error = "로그인에 실패했습니다. 아이디의 형식이 잘못되었습니다.";
             StateHasChanged();
         }
-
-        
     }
 }
 
