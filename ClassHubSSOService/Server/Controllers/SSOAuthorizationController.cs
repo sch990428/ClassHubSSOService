@@ -55,26 +55,34 @@ namespace SSOAuthorizationServer.Controllers
             Console.WriteLine("[ID : " + request.UserId + "]에 대한 토큰 발급 요청이 도착했습니다!");
 
             string role;
+            string name;
+
             var connectionString = "Host=\r\nacademic-info-db.postgres.database.azure.com\r\n;Username=classhub;Password=ch55361!;Database=AcademicInfo";
-            var role_connection = new NpgsqlConnection(connectionString);
+            var academic_connection = new NpgsqlConnection(connectionString);
             var student_exist_query = "SELECT COUNT(*) FROM student WHERE id = @id";
             var parameters = new DynamicParameters();
             parameters.Add("id", int.Parse(request.UserId));
 
-            if (role_connection.ExecuteScalar<int>(student_exist_query, parameters) == 1) {
-                role = "student"; 
+            if (academic_connection.ExecuteScalar<int>(student_exist_query, parameters) == 1) {
+                role = "student";
+
+                var student_name_query = "SELECT name FROM student WHERE id = @id";
+                name = academic_connection.ExecuteScalar<string>(student_name_query, parameters);
             }
             else
             {
                 role = "professor";
+
+                var professor_name_query = "SELECT name FROM instructor WHERE id = @id";
+                name = academic_connection.ExecuteScalar<string>(professor_name_query, parameters);
             }
-                // JWT 토큰 생성
-                var tokenHandler = new JwtSecurityTokenHandler();
+            // JWT 토큰 생성
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("ClassHubOnTheBuilding");
 
             var claims = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "Hello"),
+                new Claim(ClaimTypes.Name, name),
                 new Claim(ClaimTypes.Role, role),
                 new Claim("user_id", request.UserId)
             });
