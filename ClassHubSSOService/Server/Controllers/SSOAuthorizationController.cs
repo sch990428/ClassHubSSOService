@@ -55,8 +55,13 @@ namespace SSOAuthorizationServer.Controllers
             Console.WriteLine("[ID : " + request.UserId + "]에 대한 토큰 발급 요청이 도착했습니다!");
 
             string role;
-            if (request.UserId != "1")
-            {
+            var connectionString = "Host=\r\nacademic-info-db.postgres.database.azure.com\r\n;Username=classhub;Password=ch55361!;Database=AcademicInfo";
+            var role_connection = new NpgsqlConnection(connectionString);
+            var student_exist_query = "SELECT COUNT(*) FROM student WHERE id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", int.Parse(request.UserId));
+
+            if (role_connection.ExecuteScalar<int>(student_exist_query, parameters) == 1) {
                 role = "student"; 
             }
             else
