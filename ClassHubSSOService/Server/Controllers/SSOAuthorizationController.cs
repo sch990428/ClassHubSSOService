@@ -26,13 +26,38 @@ namespace SSOAuthorizationServer.Controllers
         {
             Console.WriteLine("[ID : " + request.UserId + " PW : " + request.Password + "]에 대한 인증 요청이 도착했습니다!");
 
-            MemoryCache cache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-            string authCode = GenerateCode();
+            var connectionString = "Host=\r\nacademic-info-db.postgres.database.azure.com\r\n;Username=classhub;Password=ch55361!;Database=AcademicInfo";
+            var academic_connection = new NpgsqlConnection(connectionString);
+            var student_exist_query = "SELECT COUNT(*) FROM student WHERE id = @id";
+            var professor_exist_query = "SELECT COUNT(*) FROM instructor WHERE id = @id";
+            var parameters = new DynamicParameters();
+            parameters.Add("id", int.Parse(request.UserId));
 
-            var response = new AuthorizationCodeResponse { UserId = request.UserId, AuthorizationCode = authCode };
-            string json = JsonSerializer.Serialize(response);
+            if (academic_connection.ExecuteScalar<int>(student_exist_query, parameters) == 1) {
 
-            return Ok(json);
+                string authCode = GenerateCode();
+
+                var response = new AuthorizationCodeResponse { UserId = request.UserId, AuthorizationCode = authCode };
+                string json = JsonSerializer.Serialize(response);
+                Console.WriteLine("학생 로그인");
+                return Ok(json);
+
+            } else if (academic_connection.ExecuteScalar<int>(professor_exist_query, parameters) == 1) {
+
+                string authCode = GenerateCode();
+
+                var response = new AuthorizationCodeResponse { UserId = request.UserId, AuthorizationCode = authCode };
+                string json = JsonSerializer.Serialize(response);
+                Console.WriteLine("교수 로그인");
+                return Ok(json);
+
+            } else {
+
+                Console.WriteLine("계정정보 없음");
+                return BadRequest();
+
+            }
+            
         }
         private string GenerateCode()
         {
