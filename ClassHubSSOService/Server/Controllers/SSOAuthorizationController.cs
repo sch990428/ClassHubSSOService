@@ -131,7 +131,7 @@ namespace SSOAuthorizationServer.Controllers
 
             // 데이터 저장
             IDatabase cache = connection.GetDatabase();
-            cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromSeconds(60));
+            cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromSeconds(300));
 
             return Ok(json);
         }
