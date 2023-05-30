@@ -6,13 +6,14 @@ using Npgsql;
 using SSOAuthorizationServer.Shared;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Text.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
 using System.Data;
-using System.Xml.Linq;
 
 namespace SSOAuthorizationServer.Controllers
 {
@@ -122,7 +123,7 @@ namespace SSOAuthorizationServer.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             string Atoken = tokenHandler.WriteToken(token);
 
-            string Rtoken = GenerateCode();
+            string Rtoken = RandomStringGenerator.GenerateRandomString(16);
             var response = new AccessTokenResponse { AccessToken = Atoken, RefreshToken = Rtoken };
             string json = JsonSerializer.Serialize(response);
 
@@ -137,13 +138,13 @@ namespace SSOAuthorizationServer.Controllers
             return Ok(json);
         }
 
-        private string GenerateCode()
-        {
-            using (var randomGenerator = new RNGCryptoServiceProvider())
-            {
-                byte[] randomBytes = new byte[16];
-                randomGenerator.GetBytes(randomBytes);
-                return Convert.ToBase64String(randomBytes);
+        public class RandomStringGenerator {
+            private static Random random = new Random();
+
+            public static string GenerateRandomString(int length) {
+                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                return new string(Enumerable.Repeat(chars, length)
+                  .Select(s => s[random.Next(s.Length)]).ToArray());
             }
         }
     };
