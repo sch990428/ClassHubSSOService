@@ -115,7 +115,7 @@ namespace SSOAuthorizationServer.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                                                      SecurityAlgorithms.HmacSha256Signature)
             };
