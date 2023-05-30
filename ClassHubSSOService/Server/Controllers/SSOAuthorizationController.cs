@@ -132,6 +132,7 @@ namespace SSOAuthorizationServer.Controllers
             // 데이터 저장
             IDatabase cache = connection.GetDatabase();
             cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromMinutes(15));
+            cache.StringSet(request.UserId + "_rtoken", Rtoken, TimeSpan.FromDays(1));
 
             return Ok(json);
         }
@@ -140,7 +141,7 @@ namespace SSOAuthorizationServer.Controllers
         {
             using (var randomGenerator = new RNGCryptoServiceProvider())
             {
-                byte[] randomBytes = new byte[8];
+                byte[] randomBytes = new byte[16];
                 randomGenerator.GetBytes(randomBytes);
                 return Convert.ToBase64String(randomBytes);
             }
