@@ -36,7 +36,7 @@
     }
 
     .text {
-        padding-top: 80px;
+        padding-top: 30px;
         margin-bottom: 20px;
     }
 
@@ -55,7 +55,6 @@
         font-size: 15px;
         margin: 0 auto;
         max-width: 400px;
-        padding: 10px;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     }
 
@@ -135,13 +134,40 @@
             Single Sign login is a service that allows you to use our entire system without additional login through one login.
         </span>
     </div>
-    <p>
+</div>
+<br />
+<div class="loginArea">
+    @if (error != null)
+    {
+        <div class="alert alert-danger" style="max-width: 350px; margin: 0 auto;" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+            <span>@error</span>
+        </div>
+    }
+    <div class="loginText">
         <br />
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            임시 교번 확인하기
+        <span class="fs-3" style="color: RGB(8, 67, 165);">통합</span> <span class="fs-3" style="color: black;">로그인</span>  <span class="fs-5" style="color: lightgray;">ㅣSingle Sign On</span>
+    </div>
+    <p class="fs-6 text-end" style="color: RGB(8, 67, 165); padding-right:10px;">학생, 교직원 및 강사 전용 </p>
+    <label class="form-label">
+        <span class="input-label">ID</span>
+    </label>
+    <input type="text" @bind-value="username" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
+    <br>
+    <label class="form-label">
+        <span class="input-label">비밀번호</span>
+    </label>
+    <input type="password" @bind-value="password" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
+    <br>
+    <button @onclick="OnLogin" class="loginBtn">로그인<i class="oi oi-arrow-circle-right" style="padding-left:20px;"></i></button>
+    <p style="margin-bottom: 0;">
+        <br />
+        <button style="width:100%; border:0; background-color:RGB(8, 67, 165); color:white; height:50px; padding:0;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            임시 교번 확인하기(Find ID for professor)
         </button>
     </p>
     <div class="collapse" id="collapseExample">
+        <br />
         <div class="card card-body mx-auto" style="width: 300px;">
             현상원 1<br />
             신민호 2<br />
@@ -163,36 +189,22 @@
             박정민 18<br />
             장혁수 19
         </div>
+        <br />
     </div>
-</div>
-<br />
-<div class="loginArea">
-    @if (error != null)
-    {
-        <div class="alert alert-danger" style="max-width: 350px; margin: 0 auto;" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
-            <span>@error</span>
+    <p style="margin-top: 0;">
+        <button style="width:100%; border:0; background-color:RGB(8, 67, 215); color:white; height:50px; padding:0;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+            비밀번호 찾기(Find Password)
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample2">
+        <div class="card card-body mx-auto" style="width: 300px;">
+            아무 비밀번호나 입력하셔도 됩니다
         </div>
         <br />
-    }
-    <div class="loginText">
-        <br />
-        <span class="fs-3" style="color: RGB(8, 67, 165);">통합</span> <span class="fs-3" style="color: black;">로그인</span>  <span class="fs-5" style="color: lightgray;">ㅣSingle Sign On</span>
     </div>
-    <p class="fs-6 text-end" style="color: RGB(8, 67, 165); padding-right:10px;">학생, 교직원 및 강사 전용 </p>
-    <label class="form-label">
-        <span class="input-label">ID</span>
-    </label>
-    <input type="text" @bind-value="username" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
-    <br>
-    <label class="form-label">
-        <span class="input-label">비밀번호</span>
-    </label>
-    <input type="password" @bind-value="password" @bind-value:event="oninput" @onkeydown="HandleKeyDown" />
-    <br>
-    <button @onclick="OnLogin" class="loginBtn">로그인<i class="oi oi-arrow-circle-right" style="padding-left:20px;"></i></button>
-    <br />
 </div>
+
+
 
 @code {
     @inject ILogger<Login> logger
