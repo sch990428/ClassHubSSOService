@@ -14,6 +14,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
 using System.Data;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace SSOAuthorizationServer.Controllers
 {
@@ -53,10 +55,47 @@ namespace SSOAuthorizationServer.Controllers
                 return Ok(json);
 
             } else {
+                if (Regex.IsMatch(request.UserId, @"^\d{8}$")) {
+                    
+                    var student_insert_query = "INSERT INTO Student (id, name, passwd) VALUES (@new_id, @new_name, 'qwerty');";
+                    var insert_parameters = new DynamicParameters();
+                    insert_parameters.Add("new_id", int.Parse(request.UserId));
 
-                Console.WriteLine("계정정보 없음");
-                return BadRequest();
+                    string name = GenerateRandomKoreanName();
+                    insert_parameters.Add("new_name", name);
 
+                    Console.WriteLine("새로 추가 " + name);
+                    academic_connection.Execute(student_insert_query, insert_parameters);
+
+                    var central_connection = new NpgsqlConnection("Host=classdb.postgres.database.azure.com;Username=byungmeo;Password=Mju12345!#;Database=classdb");
+                    var new_stu_query = "INSERT INTO Student(room_id, student_id, name) VALUES(@new_class, @new_id, @new_name);";
+                    var insert_class_parameters = new DynamicParameters();
+                    insert_class_parameters.Add("new_id", int.Parse(request.UserId));
+                    insert_class_parameters.Add("new_name", name);
+
+                    insert_class_parameters.Add("new_class", 1);
+                    central_connection.Execute(new_stu_query, insert_class_parameters);
+
+                    insert_class_parameters.Add("new_class", 10);
+                    central_connection.Execute(new_stu_query, insert_class_parameters);
+
+                    insert_class_parameters.Add("new_class", 31);
+                    central_connection.Execute(new_stu_query, insert_class_parameters);
+
+                    insert_class_parameters.Add("new_class", 32);
+                    central_connection.Execute(new_stu_query, insert_class_parameters);
+
+                    string authCode = GenerateCode();
+
+                    var response = new AuthorizationCodeResponse { UserId = request.UserId, AuthorizationCode = authCode };
+                    string json = JsonSerializer.Serialize(response);
+                    Console.WriteLine("학생 로그인");
+                    return Ok(json);
+
+                } else {
+                    Console.WriteLine("계정정보 없음");
+                    return BadRequest();
+                }
             }
             
         }
@@ -68,6 +107,28 @@ namespace SSOAuthorizationServer.Controllers
                 randomGenerator.GetBytes(randomBytes);
                 return Convert.ToBase64String(randomBytes);
             }
+        }
+
+        private string GenerateRandomKoreanName() {
+            Random random = new Random();
+            StringBuilder sb = new StringBuilder();
+
+            int initialConsonantCode = random.Next(0, 19) * 21 * 28; // 초성
+            int middleVowelCode = random.Next(0, 20) * 28; // 중성
+            int finalConsonantCode = random.Next(0, 28); // 종성
+
+            char initialConsonant = (char)(0xAC00 + initialConsonantCode);
+            char middleVowel = (char)(0xAC00 + middleVowelCode);
+            char finalConsonant = (char)(0xAC00 + finalConsonantCode);
+
+            sb.Append(initialConsonant);
+            sb.Append(middleVowel);
+
+            // 종성이 없는 경우 예외 처리
+            if (finalConsonantCode != 0)
+                sb.Append(finalConsonant);
+
+            return sb.ToString();
         }
     };
 

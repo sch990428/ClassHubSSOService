@@ -231,11 +231,11 @@
     {
         logger.LogInformation("로그인 시도" + username);
         //로그인 버튼을 누르면 서버로 POST요청(body엔 ID와 PW)을 보냄
-        
-        var request = new SSOLoginRequest { UserId = username, Password = password, RedirectUri = NavigationManager.Uri };
-        var response = await Http.PostAsJsonAsync<SSOLoginRequest>("SSOLogin", request);
 
         if (Regex.IsMatch(username, @"^\d{8}$") || Regex.IsMatch(username, @"^\d{1,2}$")) {
+            var request = new SSOLoginRequest { UserId = username, Password = password, RedirectUri = NavigationManager.Uri };
+            var response = await Http.PostAsJsonAsync<SSOLoginRequest>("SSOLogin", request);
+
             if (response.IsSuccessStatusCode)
             {
                 string redirectUrl = await response.Content.ReadAsStringAsync();
