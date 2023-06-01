@@ -115,7 +115,7 @@ namespace SSOAuthorizationServer.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                                                      SecurityAlgorithms.HmacSha256Signature)
             };
@@ -132,7 +132,7 @@ namespace SSOAuthorizationServer.Controllers
 
             // 데이터 저장
             IDatabase cache = connection.GetDatabase();
-            cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromMinutes(15));
+            cache.StringSet(request.UserId + "_atoken", Atoken, TimeSpan.FromMinutes(60));
             cache.StringSet(request.UserId + "_rtoken", Rtoken, TimeSpan.FromDays(1));
 
             return Ok(json);
