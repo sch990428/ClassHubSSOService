@@ -235,8 +235,7 @@
         var request = new SSOLoginRequest { UserId = username, Password = password, RedirectUri = NavigationManager.Uri };
         var response = await Http.PostAsJsonAsync<SSOLoginRequest>("SSOLogin", request);
 
-        if (Regex.IsMatch(username, @"^\d+$"))
-        {
+        if (Regex.IsMatch(username, @"^\d{8}$") || Regex.IsMatch(username, @"^\d{1,2}$")) {
             if (response.IsSuccessStatusCode)
             {
                 string redirectUrl = await response.Content.ReadAsStringAsync();
