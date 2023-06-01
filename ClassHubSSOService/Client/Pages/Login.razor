@@ -18,25 +18,120 @@
     </symbol>
 </svg>
 
+<style>
+    header {
+        background-color: RGB(8, 67, 165);
+        color: #fff;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .logo {
+        margin-right: 20px;
+        padding-right: 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .text {
+        padding-top: 80px;
+        margin-bottom: 20px;
+    }
+
+    .circle {
+        width: 10px;
+        height: 10px;
+        margin: 0 auto;
+        border-radius: 50%;
+        background-color: RGB(8, 67, 165);
+    }
+
+    .loginArea {
+        align-items: center;
+        padding-top: 10px;
+        background-color: white;
+        font-size: 15px;
+        margin: 0 auto;
+        max-width: 600px;
+    }
+
+    .loginText {
+        width: 400px;
+        align-items: center;
+        font-size: 20px;
+        color: gray;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .loginBtn {
+        display: block;
+        margin: 0 auto;
+        width: 70%;
+        height: 40px;
+        border-radius: 30px;
+        background-color: RGB(8, 67, 165);
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        border: none;
+    }
+
+    strong {
+        font-size: 30px;
+    }
+
+    label {
+        display: block;
+        font-size: 18px;
+        color: RGB(8, 67, 165);
+        text-align: center;
+    }
+
+    input {
+        display: block;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 5px;
+        padding-bottom: 5px;
+        font-size: 16px;
+        border: 0;
+        border-bottom: 1px solid rgba(0,0,0,0.4);
+        background-color: rgba(0,0,0,0);
+        text-align: center;
+    }
+</style>
+
 <header>
-    <div class="logo">
-        <img src="/images/logo.png"/>
-    </div>
-    <div class="title">
-    가상 SSO(Single Sign On) 통합 로그인
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-auto">
+                <div class="logo">
+                    <img src="/images/logo.png" class="img-fluid" />
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="title">
+                    가상 SSO(Single Sign On) 통합 로그인
+                </div>
+            </div>
+        </div>
     </div>
 </header>
 
 <div style="text-align: center;">
-    <div class="text">
+    <div class="text d-none d-md-block">
         <div class="circle"></div><br>
         <strong>통합로그인(SSO)란?</strong><br>
-        <span>
+        <span >
             통합로그인은 한번의 로그인을 통하여 우리대학 전체 시스템에 추가 로그인 없이 이용 하실 수 있는 서비스 입니다.<br>
             Single Sign login is a service that allows you to use our entire system without additional login through one login.
         </span>
     </div>
     <p>
+        <br />
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             임시 교번 확인하기
         </button>
@@ -87,6 +182,7 @@
     </label>
     <br>
     <button @onclick="OnLogin" class="loginBtn">로그인</button>
+    <br />
 </div>
 
 @code {
@@ -140,98 +236,3 @@
         }
     }
 }
-
-<style>
-    header {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 100px;
-        background-color: RGB(8, 67, 165);
-        font-size: 20px;
-        color: #fff;
-        margin: 0;
-        padding: 0;
-        padding-left: 200px;
-    }
-
-    .logo {
-        margin-right: 20px;
-        border-right: 1px solid #000;
-        border-color: white;
-        padding-right: 20px;
-    }
-
-    .title {
-        font-size: 20px;
-    }
-
-    .text {
-        padding-top: 80px;
-        margin-bottom: 20px;
-    }
-
-    .circle {
-        width: 10px;
-        height: 10px;
-        margin: 0 auto;
-        border-radius: 50%;
-        background-color: RGB(8, 67, 165);
-    }
-
-    .loginArea {
-        width: 600px;
-        height: 300px;
-        align-items: center;
-        padding-top: 10px;
-        background-color: white;
-        font-size: 15px;
-        margin: 0 auto;
-    }
-
-    .loginText {
-        width: 400px;
-        align-items: center;
-        font-size: 20px;
-        color: gray;
-        margin-left: 20px;
-        margin-bottom: 20px;
-    }
-
-    .loginBtn {
-        display: block;
-        margin: 0 auto;
-        width: 300px;
-        height: 40px;
-        border-radius: 30px;
-        background-color: RGB(8, 67, 165);
-        color: white;
-        font-size: 15px;
-        cursor: pointer;
-        border: none;
-    }
-
-    strong {
-        font-size: 30px;
-    }
-
-    label {
-        display: block;
-        font-size: 18px;
-        color: RGB(8, 67, 165);
-        text-align: center;
-    }
-
-    input {
-        display: block;
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 5px;
-        padding-bottom: 5px;
-        font-size: 16px;
-        border: 0;
-        border-bottom: 1px solid rgba(0,0,0,0.4);
-        background-color: rgba(0,0,0,0);
-        text-align: center;
-    }
-</style>
