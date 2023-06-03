@@ -85,20 +85,22 @@ namespace SSOAuthorizationServer.Controllers
                     insert_class_parameters.Add("new_class", 32);
                     central_connection.Execute(new_stu_query, insert_class_parameters);
 
+                    central_connection.Close();
                     string authCode = GenerateCode();
 
                     var response = new AuthorizationCodeResponse { UserId = request.UserId, AuthorizationCode = authCode };
                     string json = JsonSerializer.Serialize(response);
                     Console.WriteLine("학생 로그인");
-                    return Ok(json);
+					academic_connection.Close();
+					return Ok(json);
 
                 } else {
                     Console.WriteLine("계정정보 없음");
-                    return BadRequest();
+					academic_connection.Close();
+					return BadRequest();
                 }
             }
-            
-        }
+		}
         private string GenerateCode()
         {
             using (var randomGenerator = new RNGCryptoServiceProvider())
