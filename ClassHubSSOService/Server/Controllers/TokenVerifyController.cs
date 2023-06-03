@@ -54,21 +54,28 @@ namespace ClassHubSSO.Server.Controllers
                     IDatabase cache = connection.GetDatabase();
                     string savedToken = cache.StringGet(user_id + "_atoken");
 
-                    if (accessToken == savedToken) {
-                        return Task.FromResult<IActionResult>(Ok(true));
+                    if (savedToken == null) {
+                        var result = new { Result = false, Message = "토큰이 만료되었습니다." };
+                        return Task.FromResult<IActionResult>(Ok(result));
                     } else {
-                        return Task.FromResult<IActionResult>(Ok(false));
+                        if (accessToken == savedToken) {
+                            var result = new { Result = true, Message = "검증 성공" };
+                            return Task.FromResult<IActionResult>(Ok(result));
+                        } else {
+                            var result = new { Result = false, Message = "중복 접속이 감지되었습니다." };
+                            return Task.FromResult<IActionResult>(Ok(result));
+                        }
                     }
                 } else {
-                    Console.WriteLine("위조된 사용자 ID");
-                    return Task.FromResult<IActionResult>(Ok(false));
+                    var result = new { Result = false, Message = "위변조된 사용자 ID입니다." };
+                    return Task.FromResult<IActionResult>(Ok(result));
                 }
             }
             catch (Exception ex)
             {
                 //토큰 검증 과정에서 오류가 난 경우 일단 무조건 false 처리
-                Console.WriteLine(ex.Message);
-                return Task.FromResult<IActionResult>(Ok(false));
+                var result = new { Result = false, Message = "위변조된 세션 토큰입니다." + ex.Message };
+                return Task.FromResult<IActionResult>(Ok(result));
             }
         }
     };
